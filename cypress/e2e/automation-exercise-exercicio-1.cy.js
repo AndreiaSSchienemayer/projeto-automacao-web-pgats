@@ -5,7 +5,6 @@ import {
     getRandomNumber     
 } from '../support/helprs.js'
 import { createRandomUser } from '../support/helprs.js';
-import { faker, fakerPT_BR } from '@faker-js/faker';
 import { faker } from '@faker-js/faker';
 import 'cypress-xpath';
 
@@ -31,7 +30,7 @@ describe('Automation Exercise', () => {
         cy.get('a[href="/login"]').click()
     })
 
-    it.only('Test Case 1: Register User', () => {
+    it('Test Case 1: Register User', () => {
     // Arrange
         const timestamp = new Date().getTime()
         const user = createRandomUser();
@@ -61,7 +60,9 @@ describe('Automation Exercise', () => {
         cy.url().should('includes', 'account_created');
         cy.xpath('//b[contains(text(),"Account Created!")]').should('be.visible');
         cy.xpath('//h2[@data-qa="account-created"]').should('have.text', 'Account Created!');
-        cy.xpath('//button[@data-qa="continue-button"]').click();
+        //cy.xpath('//button[@data-qa="continue-button"]').click();
+        cy.xpath('//*[@data-qa="continue-button"]').should('be.visible').click();
+
         cy.contains('Logged in as');
     });
 
@@ -98,36 +99,24 @@ describe('Automation Exercise', () => {
         cy.contains('Email Address already exist!').should('be.visible');
     });  
     
-    it('Enviar um formulário de contato com upload de arquivo', () => {
+    it('Test Case 6: Enviar um formulário de contato com upload de arquivo', () => {
         cy.visit('https://www.automationexercise.com/contact_us');
         cy.xpath('//input[@data-qa="name"]').type(userDataContact.name);
         cy.xpath('//input[@data-qa="email"]').type(userDataContact.email);
         cy.xpath('//input[@data-qa="subject"]').type(userDataContact.subject);
         cy.xpath('//textarea[@data-qa="message"]').type(userDataContact.yourmessage);
 
-        // Upload de arquivo (certifique-se que o plugin está instalado e importado)
-        cy.get('input[type="file"]').attachFile('contac_us_data.json');
+        cy.get('[name="upload_file"]').attachFile('contac_us_data.json');
 
-        cy.xpath('//button[@data-qa="submit-button"]').click();
-        cy.contains('Success! Your details have been submitted successfully.').should('be.visible');
-    });
-
-    it('Enviar um formulário de contato com upload de arquivo', () => {
-        // cy.visit('https://www.automationexercise.com/')
-        cy.xpath('//a[contains(@href,"contact")]').click();
-        cy.xpath('//input[@data-qa="name"]').type(userDataContact.name);
-        cy.xpath('//input[@data-qa="email"]').type(userDataContact.email);
-        cy.xpath('//input[@data-qa="subject"]').type(userDataContact.subject);
-        cy.xpath('//textarea[@data-qa="message"]').type(userDataContact.yourmessage);
-
-        // Upload de arquivo usando cypress-file-upload
-        cy.get('input[type="file"]').attachFile('contac_us_data.json');
-
-        cy.xpath('//button[@data-qa="submit-button"]').click();
-        cy.get('.status').should('be.visible');
+        cy.xpath('//*[@data-qa="submit-button"]').should('be.visible').click();
         cy.contains('Success! Your details have been submitted successfully.').should('be.visible');
     });
     
 });
 
+//OBS: 
+//Ao adaptar os testes para XPath, percebi que os seletores ficaram mais flexíveis e precisos, especialmente para elementos difíceis de acessar com CSS.
+//Por outro lado, a legibilidade dos testes diminuiu um pouco, pois XPath é menos intuitivo que CSS.
+//A velocidade de execução dos testes não mudou significativamente para poucos elementos, mas pode ser afetada em páginas maiores.
+//Recomendo usar XPath apenas quando realmente necessário, mantendo CSS como padrão para legibilidade e manutenção.
 

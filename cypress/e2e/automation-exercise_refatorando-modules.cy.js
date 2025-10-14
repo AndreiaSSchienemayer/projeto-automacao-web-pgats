@@ -4,8 +4,9 @@ import userDataContact from '../fixtures/contac_us_data.json'
 import {
     getRandomNumber     
 } from '../support/helprs.js'
-import { createRandomUser } from '../support/helprs';
+import { createRandomUser } from '../support/helprs.js';
 import { faker, fakerPT_BR } from '@faker-js/faker';
+import {navegarParaLogin} from '../modules'
 
 // describe / context - suite ou conjunto de testes em um mesmo arquivo
 // it - representa um teste dentro de um bloco ou conjunto de testes

@@ -1,10 +1,17 @@
 import { faker } from '@faker-js/faker'
-import { first } from 'lodash';
 
-function getRandomNumber(){
-    return new Date().getTime()
+export function getRandomNumber(){
+    //return new Date().getTime()
+    //return faker.number.bigInt()
+    return faker.number.hex({min: 10000, max: 65535})
+    
 }
-export default getRandomNumber();
+
+export function getRandonEmail(){
+  return `qa-tester-${getRandomNumber()}@test.com.br`
+}
+
+
 
 
 export function createRandomUser() {

@@ -2,11 +2,15 @@
 import userData from '../fixtures/example.json'
 import userDataContact from '../fixtures/contac_us_data.json'
 import {
-    getRandomNumber     
+    getRandomNumber,
+    getRandonEmail  
 } from '../support/helprs.js'
 import { createRandomUser } from '../support/helprs.js';
-import { faker, fakerPT_BR } from '@faker-js/faker';
-import {navegarParaLogin} from '../modules'
+import { faker } from '@faker-js/faker';
+//import {navegarParaLogin} from '../modules'
+
+
+
 
 // describe / context - suite ou conjunto de testes em um mesmo arquivo
 // it - representa um teste dentro de um bloco ou conjunto de testes
@@ -30,14 +34,29 @@ describe('Automation Exercise', () => {
         cy.get('a[href="/login"]').click()
     })
 
+    it('Exemplos de logs', () => {
+        cy.log('Step 1 :: Pgats Automacao Web Cy Log')
+        cy.log('Step 2 :: Pgats Automacao Web Cy Log')
+        cy.log(`getRandomNumber:${getRandomNumber()}`)
+        cy.log(`getRandomMail:${getRandonEmail()}`)
+        cy.log(`Nome do usuário: ${userData.name}`)
+        cy.log(`Email do usuário: ${userData.email}`)
+        cy.log(`Dog Breed: ${faker.animal.dog()}`)
+        cy.fixture('imagem-exemplo.png').as('imagem')
+        cy.get('[name="upload_file"]').selectFile('@imagem')
+        console.log(`Pgats Automação Web Console Log`)
+    });
+
     it.only('Test Case 1: Register User', () => {
         //Arange
+        const firstName = faker.person.firstName()
+        const lastName = faker.person.lastName()
 
         const timestamp = new Date().getTime()
         //cy.viewport(300, 1000) Para definir tamanho da tela para testar com mobile por exemplo, pode ser definido o tamanho manualmente conforme foi feito no exemplo ou pegar os
         //tamanhos já sugeridos.
         const user = createRandomUser();
-        cy.get('[data-qa="signup-name"]').type(faker.internet.username());
+        cy.get('[data-qa="signup-name"]').type(faker.person.firstName());
         cy.get('[data-qa="signup-email"]').type(faker.internet.email());
         cy.contains('button','Signup').click()//exemplo clicando no botão
         //radio button ou checkboxes -> usa o comando check
@@ -51,14 +70,16 @@ describe('Automation Exercise', () => {
         //radio button ou checkboxes -> usa o comando check
         cy.get('input[type="checkbox"]#newsletter').check()
         cy.get('input[type="checkbox"]#optin').check()
-        cy.get('input#first_name').type('Bob')
-        cy.get('input#last_name').type('Narciso Pipoca')
-        cy.get('input#company').type('Pgats')
-        cy.get('input#address1').type('Avenida Selenium, n 2004')
-        cy.get('select#country').type('Canada')
-        cy.get('input#state').type('California')
+        //cy.get('input#first_name').type(firstName) // como declarei as variaveis acima, posso só chamar a variavel aqui. 
+        cy.get('input#first_name').type(faker.person.firstName())
+        //cy.get('input#last_name').type(lastName) // como declarei as variaveis acima, posso só chamar a variavel aqui. 
+        cy.get('input#last_name').type(faker.person.lastName())
+        cy.get('input#company').type(`Pgats ${faker.company.name()}`)
+        cy.get('input#address1').type(faker.location.streetAddress())
+        cy.get('select#country').type(faker.location.city())
+        cy.get('input#state').type(faker.location.state())
         cy.get('input#city').type('Los Angeles')
-        cy.get('[data-qa="zipcode"]').type('90001')
+        cy.get('[data-qa="zipcode"]').type(faker.location.zipCode())
         cy.get('[data-qa="mobile_number"]').type('111 222 333')  
         //Act
         cy.get('[data-qa="create-account"]').click()
@@ -103,18 +124,8 @@ describe('Automation Exercise', () => {
         cy.get('input[data-qa="login-password"]').type('123456')
         cy.contains('button','Signup').click()
         cy.contains('Email Address already exist!').should('be.visible')    
-    });  
+    });    
     
-    it('Enviar um formulário de contato com upload de arquivo', () => { // minha resposta 
-        cy.visit('https://www.automationexercise.com/contact_us')
-        cy.get('[data-qa="name"]').type(userDataContact.name)
-        cy.get('[data-qa="email"]').type(userDataContact.email)
-        cy.get('[data-qa="subject"]').type(userDataContact.subject)
-        cy.get('[data-qa="message"]').type(userDataContact.yourmessage)
-        cy.get('[data-qa="submit-button"]').click()
-        cy.contains('Submit').click()
-        cy.contains('Success! Your details have been submitted successfully.').should('be.visible')    
-    }); 
 
     it('Enviar um formulário de contato com upload de arquivo', () => {
         //cy.visit('https://www.automationexercise.com/')

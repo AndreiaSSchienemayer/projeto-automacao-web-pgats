@@ -7,7 +7,11 @@ import {
 } from '../support/helprs.js'
 import { createRandomUser } from '../support/helprs.js';
 import { faker } from '@faker-js/faker';
-//import {navegarParaLogin} from '../modules'
+//import {navegarParaLogin} from '../modules/menu'
+import menu from '../modules/menu';
+import login from '../modules/login';
+import cadastro from '../modules/cadastro';
+import { preencherFormularioDePreCadastro } from '../modules/login'
 
 
 
@@ -31,7 +35,9 @@ import { faker } from '@faker-js/faker';
 describe('Automation Exercise', () => {
     beforeEach(() => {
         cy.visit('https://www.automationexercise.com/')
-        cy.get('a[href="/login"]').click()
+        //cy.get('a[href="/login"]').click()
+        menu.navegarParaLogin()
+        //navegarParaLogin()// usando o nome do módulo antes conforme linha acima fica mais visivel ainda de onde vem tal informação. 
     })
 
     it('Exemplos de logs', () => {
@@ -47,74 +53,45 @@ describe('Automation Exercise', () => {
         console.log(`Pgats Automação Web Console Log`)
     });
 
-    it.only('Test Case 1: Register User', () => {
-        //Arange
-        const firstName = faker.person.firstName()
-        const lastName = faker.person.lastName()
-
-        const timestamp = new Date().getTime()
-        //cy.viewport(300, 1000) Para definir tamanho da tela para testar com mobile por exemplo, pode ser definido o tamanho manualmente conforme foi feito no exemplo ou pegar os
-        //tamanhos já sugeridos.
-        const user = createRandomUser();
-        cy.get('[data-qa="signup-name"]').type(faker.person.firstName());
-        cy.get('[data-qa="signup-email"]').type(faker.internet.email());
-        cy.contains('button','Signup').click()//exemplo clicando no botão
-        //radio button ou checkboxes -> usa o comando check
-        //cy.get('#id_gender1).check() Assim busca pelo id do radio button caso desejar
-        cy.get('input[type=radio]').check('Mrs')
-        cy.get('input#password').type('123456',{log:false})//exemplo usando id do seletor, veja que usa o # antes do nome. O log:false server para ocultar a senha que é digitada (mostra as bolinhas pretas).
-        //para comboboxes ou selects -> usar o comando select
-        cy.get('select[data-qa=days]').select('21')//aqui foi usado o selector data-qa=days, mas uma exemplo de seletor, e foi selecionado o dia com o valor 21
-        cy.get('select[data-qa=months]').select('November')//aqui foi selecionado considerando o texto do objeto.
-        cy.get('select[data-qa=years]').select('1988')
-        //radio button ou checkboxes -> usa o comando check
-        cy.get('input[type="checkbox"]#newsletter').check()
-        cy.get('input[type="checkbox"]#optin').check()
-        //cy.get('input#first_name').type(firstName) // como declarei as variaveis acima, posso só chamar a variavel aqui. 
-        cy.get('input#first_name').type(faker.person.firstName())
-        //cy.get('input#last_name').type(lastName) // como declarei as variaveis acima, posso só chamar a variavel aqui. 
-        cy.get('input#last_name').type(faker.person.lastName())
-        cy.get('input#company').type(`Pgats ${faker.company.name()}`)
-        cy.get('input#address1').type(faker.location.streetAddress())
-        cy.get('select#country').type(faker.location.city())
-        cy.get('input#state').type(faker.location.state())
-        cy.get('input#city').type('Los Angeles')
-        cy.get('[data-qa="zipcode"]').type(faker.location.zipCode())
-        cy.get('[data-qa="mobile_number"]').type('111 222 333')  
-        //Act
-        cy.get('[data-qa="create-account"]').click()
-        //Assert
-        //OBS: É comum ter mais de uma asserção para garantir que o teste passou, no exemplo abaixo por exemplo adicionamos 3 asserções.
+    it('Test Case 1: Register User', () => {
+        login.preencherFormularioDePreCadastro()
+        //preencherFormularioDePreCadastro() Usando classe conforme exemplo da linha acima fica mais legível.        
+        cadastro.preencherFormularioDeCadastroCompleto()
+        //Asserções é indicado manter no arquivo de testes mesmo. 
         cy.url().should('includes','account_created')
         cy.contains('b','Account Created!')
-        cy.get('h2[data-qa="account-created"]').should('have.text','Account Created!')
+        cy.get('h2[data-qa="account-created"]').should('have.text','Account Created!')        
         cy.get('[data-qa="continue-button"]').click()
         // Verifica se aparece o texto "Logged in as" na página
         cy.contains('Logged in as')
     });
 
     it('Test Case 2: Login User with correct email and password', () => {
-        cy.get('input[data-qa="login-email"]').type('andreia@andreia.com')
-        cy.get('input[data-qa="login-password"]').type('123456')
-        cy.contains('button','Login').click()
-        cy.contains('Logged in as').should('be.visible')
-        cy.get(`i.fa-user`).parent().should('contain','Andreia')        
+    login.preencherFormularioDeLogin(userData.user, userData.password)
+    //const nomeDoUsuario = userData.name
+
+    cy.get('i.fa-user', { timeout: 10000 }).parent().should('contain', userData.name)
+    cy.get('a[href="/logout"]', { timeout: 10000 }).should('be.visible')
+    cy.get(':nth-child(10) > a', { timeout: 10000 })
+    .should('be.visible')
+    .and('have.text', `Logged in as ${userData.name}`)
+    cy.contains('b', userData.name).should('be.visible')
     });
 
     it('Test Case 3: Login User with incorrect email and password', () => {
-        cy.get('input[data-qa="login-email"]').type('andreia_errado@andreia.com')
-        cy.get('input[data-qa="login-password"]').type('123456')
-        cy.contains('button','Login').click()
+        login.preencherFormularioDeLogin(userData.user, '1234')
         cy.contains('Your email or password is incorrect!').should('be.visible')        
     });
 
-    it('Test Case Test Case 4: Logout User', () => {
-        cy.get('input[data-qa="login-email"]').type('andreia@andreia.com')
-        cy.get('input[data-qa="login-password"]').type('123456')
-        cy.contains('button','Login').click()
+
+    it.only('Test Case Test Case 4: Logout User', () => {
+        login.preencherFormularioDeLogin(userData.user, userData.password)
         cy.contains('Logged in as').should('be.visible')
-        cy.get('a[href="/logout"]').click()
+        menu.efetuarLogout()
         cy.contains('Signup / Login')
+        cy.contains('Login to your account')
+        cy.get('a[href="/logout"]').should('not.exist')
+        cy.get('a[href="/login"]').should('contain','Signup / Login')
     });
 
 

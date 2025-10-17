@@ -11,7 +11,9 @@ import { faker } from '@faker-js/faker';
 import menu from '../modules/menu';
 import login from '../modules/login';
 import cadastro from '../modules/cadastro';
+import contato from '../modules/contato';
 import { preencherFormularioDePreCadastro } from '../modules/login'
+
 
 
 
@@ -40,18 +42,18 @@ describe('Automation Exercise', () => {
         //navegarParaLogin()// usando o nome do módulo antes conforme linha acima fica mais visivel ainda de onde vem tal informação. 
     })
 
-    it('Exemplos de logs', () => {
-        cy.log('Step 1 :: Pgats Automacao Web Cy Log')
-        cy.log('Step 2 :: Pgats Automacao Web Cy Log')
-        cy.log(`getRandomNumber:${getRandomNumber()}`)
-        cy.log(`getRandomMail:${getRandonEmail()}`)
-        cy.log(`Nome do usuário: ${userData.name}`)
-        cy.log(`Email do usuário: ${userData.email}`)
-        cy.log(`Dog Breed: ${faker.animal.dog()}`)
-        cy.fixture('imagem-exemplo.png').as('imagem')
-        cy.get('[name="upload_file"]').selectFile('@imagem')
-        console.log(`Pgats Automação Web Console Log`)
-    });
+    //it('Exemplos de logs', () => {
+        //cy.log('Step 1 :: Pgats Automacao Web Cy Log')
+        //cy.log('Step 2 :: Pgats Automacao Web Cy Log')
+        //cy.log(`getRandomNumber:${getRandomNumber()}`)
+        //cy.log(`getRandomMail:${getRandonEmail()}`)
+        //cy.log(`Nome do usuário: ${userData.name}`)
+        //cy.log(`Email do usuário: ${userData.email}`)
+        //cy.log(`Dog Breed: ${faker.animal.dog()}`)
+        //cy.fixture('imagem-exemplo.png').as('imagem')
+        //cy.get('[name="upload_file"]').selectFile('@imagem')
+        //console.log(`Pgats Automação Web Console Log`)
+    //});
 
     it('Test Case 1: Register User', () => {
         login.preencherFormularioDePreCadastro()
@@ -74,7 +76,7 @@ describe('Automation Exercise', () => {
     cy.get('a[href="/logout"]', { timeout: 10000 }).should('be.visible')
     cy.get(':nth-child(10) > a', { timeout: 10000 })
     .should('be.visible')
-    .and('have.text', `Logged in as ${userData.name}`)
+    .and('contain', `Logged in as ${userData.name}`)
     cy.contains('b', userData.name).should('be.visible')
     });
 
@@ -83,8 +85,7 @@ describe('Automation Exercise', () => {
         cy.contains('Your email or password is incorrect!').should('be.visible')        
     });
 
-
-    it.only('Test Case Test Case 4: Logout User', () => {
+    it('Test Case Test Case 4: Logout User', () => {
         login.preencherFormularioDeLogin(userData.user, userData.password)
         cy.contains('Logged in as').should('be.visible')
         menu.efetuarLogout()
@@ -94,31 +95,56 @@ describe('Automation Exercise', () => {
         cy.get('a[href="/login"]').should('contain','Signup / Login')
     });
 
-
     it('Test Case Test Case 5: Register User with existing email', () => {
-        cy.get('[data-qa="signup-name"]').type(('Tester QA'))
-        cy.get('[data-qa="signup-email"]').type('andreia@andreia.com')
-        cy.get('input[data-qa="login-password"]').type('123456')
-        cy.contains('button','Signup').click()
+        login.registrarComEmailJaEmUso()
         cy.contains('Email Address already exist!').should('be.visible')    
-    });    
-    
+    });       
 
-    it('Enviar um formulário de contato com upload de arquivo', () => {
-        //cy.visit('https://www.automationexercise.com/')
-        cy.get('a[href*=contact]').click()
-        cy.get('[data-qa="name"]').type(userDataContact.name)
-        cy.get('[data-qa="email"]').type(userDataContact.email)
-        cy.get('[data-qa="subject"]').type(userDataContact.subject)
-        cy.get('[data-qa="message"]').type(userDataContact.yourmessage)
-        
-        cy.fixture('contac_us_data.json').as('arquivo')
-        cy.get('input[type=file]').selectFile('@arquivo')
-        cy.get('[data-qa="submit-button"]').click()
-        //Assert
+    it('Test Case Test Case 6: Enviar um formulário de contato com upload de arquivo', () => {
+        contato.enviarFormularioDeContatoComUploadDeArquivo()
         cy.get('.status').should('be.visible')
-        cy.contains('Success! Your details have been submitted successfully.').should('be.visible')    
+        cy.contains('Success! Your details have been submitted successfully.').should('be.visible')
+    })
+
+    it.only('Test Case 8: Verify All Products and product detail page', () => {
+        cy.visit('https://www.automationexercise.com/')
+        cy.get('a[href="/products"]', { timeout: 10000 }).click()
+
+        cy.url().should('include', '/products')
+        cy.contains('All Products', { timeout: 10000 }).should('be.visible')
+        cy.contains('View Product', { timeout: 10000 }).should('exist')
+        cy.contains('View Product').first().click()
+        cy.url({ timeout: 10000 }).should('include', '/product_details')
+
+        cy.get('.product-information, .product-details, .product-info')
+            .first()
+            .as('info')
+
+        cy.get('@info').find('h1, h2').first().should('be.visible')                 // nome
+        cy.get('@info').contains(/Category/i).should('exist')                       // categoria
+        cy.get('@info').contains(/Price/i).should('exist')                          // preço
+        cy.get('@info').contains(/Availability/i).should('exist')                   // disponibilidade
+        cy.get('@info').contains(/Condition/i).should('exist')                      // condição
+        cy.get('@info').contains(/Brand/i).should('exist')   
+            
+    });   
+
+    it('Test Case 9: Search Product', () => {
+            
     }); 
+    
+    it('Test Case 10: Verify Subscription in home page', () => {
+            
+    }); 
+
+    it('Test Case 15: Place Order: Register before Checkout', () => {
+            
+    }); 
+
+    it('Test Case 16: Place Order: Login before Checkout', () => {
+            
+    }); 
+
     
 });
 

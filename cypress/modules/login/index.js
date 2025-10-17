@@ -18,7 +18,14 @@ class Login {
         cy.get('input[data-qa="login-password"]').clear().type(pass, { log: false })
         cy.contains('button', 'Login').click()
     }
+
+    registrarComEmailJaEmUso(){
+        cy.get('[data-qa="signup-name"]').type(('Tester QA'))
+        cy.get('[data-qa="signup-email"]').type('andreia@andreia.com')
+        cy.get('input[data-qa="login-password"]').type('123456')
+        cy.contains('button','Signup').click()
+    }
+    
 }
 
 export default new Login()
-// ...existing code...

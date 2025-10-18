@@ -1,4 +1,5 @@
 import { faker } from '@faker-js/faker'
+import { getRandonEmail, getRandomNumber } from '../../support/helprs'
 
 class Menu{
     navegarParaLogin(){    

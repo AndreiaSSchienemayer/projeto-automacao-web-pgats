@@ -106,7 +106,7 @@ describe('Automation Exercise', () => {
         cy.contains('Success! Your details have been submitted successfully.').should('be.visible')
     })
 
-    it.only('Test Case 8: Verify All Products and product detail page', () => {
+    it('Test Case 8: Verify All Products and product detail page', () => {
         cy.visit('https://www.automationexercise.com/')
         cy.get('a[href="/products"]', { timeout: 10000 }).click()
 

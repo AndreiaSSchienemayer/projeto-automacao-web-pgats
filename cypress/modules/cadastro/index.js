@@ -3,6 +3,9 @@ import { faker } from '@faker-js/faker'
 
 class Cadastro{
     preencherFormularioDeCadastroCompleto(){ 
+        const first_name=''
+        const last_name=''
+
         cy.get('input[type=radio]').check('Mrs')
         cy.get('input#password').type('123456',{log:false})//exemplo usando id do seletor, veja que usa o # antes do nome. O log:false server para ocultar a senha que é digitada (mostra as bolinhas pretas).
         //para comboboxes ou selects -> usar o comando select
@@ -29,7 +32,8 @@ class Cadastro{
         //OBS: É comum ter mais de uma asserção para garantir que o teste passou, no exemplo abaixo por exemplo adicionamos 3 asserções.
         cy.url().should('includes','account_created')
         cy.contains('b','Account Created!')
-        }        
+        }     
+        
 }
 
 export default new Cadastro()

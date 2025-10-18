@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker'
-import { getRandonEmail } from '../../support/helprs'
+import { getRandonEmail, getRandomNumber } from '../../support/helprs'
 
 class Contato {
     enviarFormularioDeContatoComUploadDeArquivo() {

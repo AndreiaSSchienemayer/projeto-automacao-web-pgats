@@ -8,16 +8,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      #clone do projeto
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      #conferir versão instalada
-        - name: Node version
+      - name: Node version
         run: node --version
 
       - name: Instalando dependências
-        run: npm install  
+        run: npm install
 
       - name: Executando testes
         run: npx cypress run

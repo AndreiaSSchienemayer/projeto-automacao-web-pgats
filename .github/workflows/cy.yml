@@ -1,16 +1,18 @@
 name: Web E2E Tests
 
 on:
+  push:
+    branches: [ main ]
   workflow_dispatch:
 
 jobs:
   e2e-tests:
     runs-on: ubuntu-latest
-    steps:
-      # clone do projeto para a máquina
-      - uses: actions/checkout@v4
 
-      # Conferir a versão instalada
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Node version
         run: node --version
 

@@ -3,8 +3,6 @@ name: Web E2E Tests
 #PRECISO ALTERAR PARA EXECUTAR MANUALMENTEEEEE
 
 on:
-  push:
-    branches: [ main ]
   workflow_dispatch:
 
 jobs:
@@ -20,6 +18,9 @@ jobs:
 
       - name: Instalando dependências
         run: npm install
+
+      - name: Run only trabalho-conclusao-disciplina spec
+        run: npx cypress run --spec "cypress/e2e/trabalho-conclusao-disciplina.cy.js"
 
       - name: Executando os testes
         run: npx cypress run

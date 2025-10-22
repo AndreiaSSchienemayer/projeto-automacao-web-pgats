@@ -22,11 +22,19 @@ jobs:
       - name: Run only trabalho-conclusao-disciplina spec
         run: npx cypress run --spec "cypress/e2e/trabalho-conclusao-disciplina.cy.js"
 
-      - uses: actions/upload-artifact@v4
-        if:  ${{ !cancelled() }}
+      - name: Garantir diretórios de relatório
+        run: mkdir -p cypress/reports cypress/reports/html || true
+
+      - name: Mesclar mochawesome JSON e gerar HTML
+        run: |
+          npx mochawesome-merge "cypress/reports/*.json" > cypress/reports/report.json || true
+          npx marge cypress/reports/report.json -f report -o cypress/reports/html || true
+
+      - name: Upload relatório mochawesome
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
         with:
-          name: relatorios
-          path:
-            cypress/reports/
-            cypress/screenshots
-            cypress/videos
+          name: relatorio-mochawesome
+          path: |
+            cypress/reports
+            cypress/reports/html

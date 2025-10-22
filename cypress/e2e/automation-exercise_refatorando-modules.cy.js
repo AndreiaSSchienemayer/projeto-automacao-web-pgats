@@ -85,7 +85,7 @@ describe('Automation Exercise', () => {
         cy.contains('Your email or password is incorrect!').should('be.visible')        
     });
 
-    it('Test Case Test Case 4: Logout User', () => {
+    it('Test Case 4: Logout User', () => {
         login.preencherFormularioDeLogin(userData.user, userData.password)
         cy.contains('Logged in as').should('be.visible')
         menu.efetuarLogout()
@@ -95,12 +95,12 @@ describe('Automation Exercise', () => {
         cy.get('a[href="/login"]').should('contain','Signup / Login')
     });
 
-    it('Test Case Test Case 5: Register User with existing email', () => {
+    it('Test Case 5: Register User with existing email', () => {
         login.registrarComEmailJaEmUso()
         cy.contains('Email Address already exist!').should('be.visible')    
     });       
 
-    it('Test Case Test Case 6: Enviar um formulário de contato com upload de arquivo', () => {
+    it('Test Case 6: Enviar um formulário de contato com upload de arquivo', () => {
         contato.enviarFormularioDeContatoComUploadDeArquivo()
         cy.get('.status').should('be.visible')
         cy.contains('Success! Your details have been submitted successfully.').should('be.visible')
@@ -139,11 +139,7 @@ describe('Automation Exercise', () => {
 
     it('Test Case 15: Place Order: Register before Checkout', () => {
             
-    }); 
-
-    it('Test Case 16: Place Order: Login before Checkout', () => {
-            
-    }); 
+    });     
 
     
 });

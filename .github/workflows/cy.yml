@@ -3,6 +3,8 @@ name: Web E2E Tests
 #PRECISO ALTERAR PARA EXECUTAR MANUALMENTEEEEE
 
 on:
+  push:
+    branches: [ main ]
   workflow_dispatch:
 
 jobs:

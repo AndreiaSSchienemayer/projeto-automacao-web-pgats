@@ -94,15 +94,22 @@ describe('Trabalho Final de Conclusão da Disciplina de Automação na Camada We
             })
     });
     
-    it.only('Test Case 10: Verificar assinatura na página inicial', () => {
+    it('Test Case 10: Verificar assinatura na página inicial', () => {
         login.registrar();
         cy.contains(/you have been successfully subscribed|successfully subscribed|subscribed/i, { timeout: 10000 })
         .should('be.visible');
     }); 
 
-    it('Test Case 15: Fazer pedido: Registre-se antes de finalizar a compra', () => {
-            
-    });     
+    it.only('Test Case 15: Fazer pedido: Registre-se antes de finalizar a compra', () => {
+        menu.navegarParaLogin();
+        login.preencherFormularioDePreCadastro()
+        cadastro.preencherFormularioDeCadastroCompleto()
+        cy.get('[data-qa="continue-button"]').click()
+        cy.get(':nth-child(10) > a', { timeout: 10000 })
+        .should('be.visible')
+        .and('contain', `Logged in as ${userData.name}`)
+        cy.contains('b', userData.name).should('be.visible')
+    }); 
 
     
 });

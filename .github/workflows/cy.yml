@@ -13,16 +13,16 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Node version
-        run: node --version
+      #- name: Node version
+        #run: node --version
 
       - name: Instalando dependências
         run: npm install
 
-      - name: Run only trabalho-conclusao-disciplina spec
+      - name: Executando testes referente ao trabalho de conclusão da disciplina
         run: npx cypress run --spec "cypress/e2e/trabalho-conclusao-disciplina.cy.js"
 
-      - name: Garantir diretórios de relatório
+      - name: Definir diretórios de relatório
         run: mkdir -p cypress/reports cypress/reports/html || true
 
       - name: Mesclar mochawesome JSON e gerar HTML

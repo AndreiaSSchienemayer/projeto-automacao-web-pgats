@@ -94,8 +94,10 @@ describe('Trabalho Final de Conclusão da Disciplina de Automação na Camada We
             })
     });
     
-    it('Test Case 10: Verificar assinatura na página inicial', () => {
-            
+    it.only('Test Case 10: Verificar assinatura na página inicial', () => {
+        login.registrar();
+        cy.contains(/you have been successfully subscribed|successfully subscribed|subscribed/i, { timeout: 10000 })
+        .should('be.visible');
     }); 
 
     it('Test Case 15: Fazer pedido: Registre-se antes de finalizar a compra', () => {

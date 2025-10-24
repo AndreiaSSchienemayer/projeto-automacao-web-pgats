@@ -24,6 +24,14 @@ class Login {
         cy.get('input[data-qa="login-password"]').type('123456')
         cy.contains('button','Signup').click()
     }
+
+    registrar(){        
+       cy.contains(/Subscription/i).should('be.visible')
+        cy.get('#susbscribe_email, #subscribe_email', { timeout: 10000 })
+            .should('exist')
+            .type('andreia@gmail.com')
+        cy.get('#subscribe', { timeout: 10000 }).should('exist').click()
+    }
     
 }
 

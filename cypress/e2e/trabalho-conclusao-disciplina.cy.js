@@ -102,16 +102,66 @@ describe('Trabalho Final de Conclusão da Disciplina de Automação na Camada We
 
     it.only('Test Case 15: Fazer pedido: Registre-se antes de finalizar a compra', () => {
         menu.navegarParaLogin();
-        login.preencherFormularioDePreCadastro()
+        login.novoCadastro()
         cadastro.preencherFormularioDeCadastroCompleto()
         cy.get('[data-qa="continue-button"]').click()
         cy.get(':nth-child(10) > a', { timeout: 10000 })
         .should('be.visible')
         .and('contain', `Logged in as ${userData.name}`)
         cy.contains('b', userData.name).should('be.visible')
-    }); 
 
-    
+        cy.get('a[href="/products"]').click()
+
+        cy.get('[data-product-id="1"]').first().within(() => {
+        cy.contains(/add to cart/i).click()
+        })
+
+        
+        cy.get('body').then($body => {
+        const $continue = $body.find('button, a').filter((i, el) => /continue shopping/i.test(Cypress.$(el).text()))
+        if ($continue.length) {
+            cy.wrap($continue.first()).click()
+        } else {
+            cy.log('Continue Shopping não encontrado — possível redirecionamento automático')
+        }
+        })
+
+        cy.get('[data-product-id="4"]').first().within(() => {
+        cy.contains(/add to cart/i).click()
+        })
+
+        cy.get('body').then($body => {
+        const $continue = $body.find('button, a').filter((i, el) => /continue shopping/i.test(Cypress.$(el).text()))
+        if ($continue.length) {
+            cy.wrap($continue.first()).click()
+        } else {
+            cy.log('Continue Shopping não encontrado — possível redirecionamento automático')
+        }
+        })
+
+        cy.get('a[href="/view_cart"]', { timeout: 10000 }).first().click()
+        cy.url().should('include', '/view_cart')
+
+        cy.contains(/Proceed To Checkout/i, { timeout: 10000 }).first().click()
+
+        cy.get('.cart_info, .table-condensed, .cart_description', { timeout: 10000 }).should('be.visible')
+        const expectedNames = ['Blue Top', 'Stylish Dress']
+        expectedNames.forEach(name => {
+        cy.get('.cart_info, .table-condensed, .cart_description')
+            .contains(name, { timeout: 10000 })
+            .should('be.visible')
+        })
+
+        cy.get('[class="form-control"]').type(('Está tudo correto'))
+        cy.contains(/Place Order/i, { timeout: 10000 }).first().click()
+
+        cy.get('[data-qa="signup-name"]').type(('Andreia'))
+            cy.get('[name="name_on_card"]').type('Andreia S')
+            cy.get('[data-qa="card-number"]').type('5486792674368117')
+            cy.get('data-qa="cvc"]').type('123')
+            cy.get('name="expiry_month"]').type('11')
+            cy.get('data-qa="expiry-year"]').type('2026')
+            cy.contains('button','Pay and Confirm Order').click()   
 });
 
 

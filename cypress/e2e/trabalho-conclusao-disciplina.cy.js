@@ -97,30 +97,30 @@ describe('Trabalho Final de Conclusão da Disciplina de Automação na Camada We
     
     it('Test Case 10: Verificar assinatura na página inicial', () => {
         login.registrar();
-        cy.contains(/you have been successfully subscribed|successfully subscribed|subscribed/i, { timeout: 10000 })
+        cy.contains(/You have been successfully subscribed!/i, { timeout: 10000 })
         .should('be.visible');
     }); 
 
     it('Test Case 15: Fazer pedido: Registre-se antes de finalizar a compra', () => {
-    menu.navegarParaLogin();
-    login.novoCadastro();
-    cadastro.preencherFormularioDeCadastroCompleto();
-    cy.get('[data-qa="continue-button"]').click();
-    cy.get(':nth-child(10) > a', { timeout: 10000 })
-        .should('be.visible')
-        .and('contain', `Logged in as ${userData.name}`);
-    cy.contains('b', userData.name).should('be.visible');
+        menu.navegarParaLogin();
+        login.novoCadastro();
+        cadastro.preencherFormularioDeCadastroCompleto();
+        cy.get('[data-qa="continue-button"]').click();
+        cy.get(':nth-child(10) > a', { timeout: 10000 })
+            .should('be.visible')
+            .and('contain', `Logged in as ${userData.name}`);
+        cy.contains('b', userData.name).should('be.visible');
 
-    carinho.adicionandoProdutosAoCarrinho();
+        carinho.adicionandoProdutosAoCarrinho();
 
-    carinho.navegarParaCarrinho();
+        carinho.navegarParaCarrinho();
 
-    carinho.confirmandoPedido();   
+        carinho.confirmandoPedido();   
 
-    carinho.efetuandoPagamento();    
+        carinho.efetuandoPagamento();    
 
-    cy.contains(/Pay and Confirm Order/i, { timeout: 10000 }).first().click();
-    cy.contains('Order Placed!').should('be.visible')
-    cy.contains('Congratulations! Your order has been confirmed!').should('be.visible')
+        cy.contains(/Pay and Confirm Order/i, { timeout: 10000 }).first().click();
+        cy.contains('Order Placed!').should('be.visible')
+        cy.contains('Congratulations! Your order has been confirmed!').should('be.visible')
     });
 });   
